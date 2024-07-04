@@ -4,10 +4,18 @@ import (
 	"api-curriculos/model"
 	"database/sql"
 	"fmt"
+
+	sq "github.com/Masterminds/squirrel"
 )
 
 type ProductRepository struct {
 	connection *sql.DB
+}
+
+type ProductDB struct {
+	Id           int
+	Product_name string
+	Price        float64
 }
 
 func NewProductRepository(connection *sql.DB) ProductRepository {
@@ -17,8 +25,13 @@ func NewProductRepository(connection *sql.DB) ProductRepository {
 }
 
 func (pr *ProductRepository) GetProducts() ([]model.Product, error) {
-	query := "SELECT id, product_name, price FROM product"
-	rows, err := pr.connection.Query(query)
+	query, args, err := sq.Select("pro_codigo", "pro_descricao", "pro_preco").From("produtos").ToSql()
+	if err != nil {
+		fmt.Println(err)
+		return []model.Product{}, err
+	}
+
+	rows, err := pr.connection.Query(query, args...)
 	if err != nil {
 		fmt.Println(err)
 		return []model.Product{}, err
@@ -49,41 +62,48 @@ func (pr *ProductRepository) GetProducts() ([]model.Product, error) {
 
 func (pr *ProductRepository) CreateProduct(p model.Product) (int, error) {
 	var id int
-	query, err := pr.connection.Prepare("INSERT INTO product (product_name, price) VALUES ($1, $2) RETURNING id")
+	query, args, err := sq.
+		Insert("produtos").
+		Columns("pro_descricao", "pro_preco").
+		Values(p.Name, p.Price).
+		Suffix("returning pro_codigo").
+		PlaceholderFormat(sq.Dollar).
+		ToSql()
 	if err != nil {
 		fmt.Println(err)
 		return 0, err
 	}
 
-	err = query.QueryRow(p.Name, p.Price).Scan(&id)
+	err = pr.connection.QueryRow(query, args...).Scan(&id)
 	if err != nil {
 		fmt.Println(err)
 		return 0, err
 	}
 
-	query.Close()
 	return id, nil
 }
 
 func (pr *ProductRepository) GetProductById(id int) (*model.Product, error) {
-	query, err := pr.connection.Prepare("SELECT id, product_name, price FROM product WHERE id = $1")
+	query, args, err := sq.
+		Select("pro_codigo", "pro_descricao", "pro_preco").
+		From("produtos").
+		Where(sq.Eq{"pro_codigo": id}).
+		PlaceholderFormat(sq.Dollar).
+		ToSql()
 	if err != nil {
 		fmt.Println(err)
 		return nil, err
 	}
 
 	var product model.Product
-
-	err = query.QueryRow(id).Scan(&product.Id, &product.Name, &product.Price)
+	err = pr.connection.QueryRow(query, args...).Scan(&product.Id, &product.Name, &product.Price)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			return nil, nil
+			return nil, nil // Retorna nil se não houver linhas encontradas
 		}
-
+		fmt.Println(err)
 		return nil, err
 	}
-
-	query.Close()
 
 	return &product, nil
 }

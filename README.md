@@ -37,17 +37,9 @@ git clone https://github.com/Trovarelli/api-go.git
 cd seu-repositorio
 ```
 
-## Iniciar a API
+### Configuração do Banco de Dados e API
 
-Com o banco de dados configurado e as migrações aplicadas, você pode iniciar a API usando o comando:
-
-```sh
-docker-compose up --build
-```
-
-### Configuração do Banco de Dados
-
-O projeto utiliza Docker Compose para configurar o banco de dados PostgreSQL. Use o comando abaixo para iniciar o banco de dados:
+O projeto utiliza Docker Compose para configurar o banco de dados PostgreSQL. Use o comando abaixo para iniciar o banco de dados e a API:
 
 ```sh
 docker-compose up -d

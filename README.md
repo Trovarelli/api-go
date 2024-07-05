@@ -95,6 +95,18 @@ make drop_tables
 - Método: GET
   Retorna o produto com o id escolhido.
 
+#### Alterar Produto pelo Id
+
+- Endpoint: /products/:id
+- Método: PUT
+  Retorna o produto modificado.
+
+#### Deletar Produto pelo Id
+
+- Endpoint: /products/:id
+- Método: DELETE
+  Remove o registro do produto com o id escolhido.
+
 ## Contribuindo
 
 Contribuições são bem-vindas! Sinta-se à vontade para abrir issues ou pull requests.

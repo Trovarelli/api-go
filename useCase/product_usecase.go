@@ -34,3 +34,11 @@ func (pu *ProductUsecase) CreateProduct(product model.Product) (model.Product, e
 		Price: product.Price,
 	}, nil
 }
+
+func (pu *ProductUsecase) UpdateProduct(product model.Product) (model.Product, error) {
+	return pu.repository.UpdateProduct(product)
+}
+
+func (pu *ProductUsecase) DeleteProduct(id int) error {
+	return pu.repository.DeleteProduct(id)
+}

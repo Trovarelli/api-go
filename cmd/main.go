@@ -2,7 +2,7 @@ package main
 
 import (
 	"api-curriculos/controller"
-	"api-curriculos/db"
+	db "api-curriculos/internal/database"
 	"api-curriculos/repository"
 	usecase "api-curriculos/useCase"
 

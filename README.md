@@ -33,8 +33,16 @@ Instale `make` conforme necessário para o seu sistema operacional:
 Clone o repositório do projeto:
 
 ```sh
-git clone https://github.com/seu-usuario/seu-repositorio.git
+git clone https://github.com/Trovarelli/api-go.git
 cd seu-repositorio
+```
+
+## Iniciar a API
+
+Com o banco de dados configurado e as migrações aplicadas, você pode iniciar a API usando o comando:
+
+```sh
+docker-compose up --build
 ```
 
 ### Configuração do Banco de Dados
@@ -66,14 +74,6 @@ Para reverter as migrações e dropar as tabelas, use o comando:
 
 ```sh
 make drop_tables
-```
-
-## Iniciar a API
-
-Com o banco de dados configurado e as migrações aplicadas, você pode iniciar a API usando o comando:
-
-```sh
-docker-compose up --build
 ```
 
 ### Endpoints da API
